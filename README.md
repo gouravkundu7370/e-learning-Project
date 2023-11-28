@@ -1,9 +1,8 @@
 # ELearning Platform
 
-## Prerequisits:
+## Prerequisites:
 
--**install node** (node --version > 19)
---**install mongo** or **set up mongo atlas**
+-**install node** (node --version > 19) -**install mongo** or **set up mongo atlas**
 
 ## Setting Up Locally
 
