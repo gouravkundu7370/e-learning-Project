@@ -16,6 +16,7 @@ model User  {
   email           String  @unique
   hashedPassword  String
   createdAt       DateTime @default(now())
+  basketIds       String[] @db.ObjectId
   updatedAt       DateTime @updatedAt
   course Course[]
  

@@ -1,27 +1,34 @@
 "use client";
-
 import React, { useState } from "react";
 import Input from "../(components)/Inputs/Input";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-
+import Button from "../(components)/Button";
+import { toast } from "react-hot-toast";
 const initialState = {
   name: "",
   email: "",
   password: "",
 };
+
 export default function page() {
   const [state, setState] = useState(initialState);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
-  const handleChange = (event) => {
+
+  function handleChange(event) {
     setState({ ...state, [event.target.name]: event.target.value });
-  };
-  const onSubmit = (event) => {
+  }
+
+  function onSubmit(event) {
+    setLoading(true);
     event.preventDefault();
+
     axios
       .post("/api/register", state)
       .then(() => {
+        toast.success("Registered");
         router.refresh();
       })
       .then(() => {
@@ -29,10 +36,14 @@ export default function page() {
           router.push("/login");
         }, 2500);
       })
+
       .catch((error) => {
         throw new Error(error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  };
+  }
 
   return (
     <form onSubmit={onSubmit} className="text-center">
@@ -62,11 +73,13 @@ export default function page() {
           value={state.password}
         />
 
-        <button type="submit">Submit</button>
+        <Button type="submit" label="Submit" disabled={loading}></Button>
       </div>
+
       <div>
-        Do You have an Account?
-        <Link href="/login">Sign In</Link>
+        <div>
+          Do you have an account ? <Link href="/login">Sign in</Link>
+        </div>
       </div>
     </form>
   );

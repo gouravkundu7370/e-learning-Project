@@ -5,34 +5,50 @@ import Input from "../(components)/Inputs/Input";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Button from "../(components)/Button";
+import { toast } from "react-hot-toast";
 
 const initialState = {
   email: "",
   password: "",
 };
+
 export default function page() {
   const [state, setState] = useState(initialState);
   const router = useRouter();
-  const handleChange = (event) => {
+  const [loading, setLoading] = useState(false);
+
+  function handleChange(event) {
     setState({ ...state, [event.target.name]: event.target.value });
-  };
-  const onSubmit = (event) => {
+  }
+
+  function onSubmit(event) {
     event.preventDefault();
+
+    setLoading(true);
+
     signIn("credentials", {
       ...state,
       redirect: false,
-    }).then((callback) => {
-      if (callback?.ok) {
-        router.refresh();
-      }
+    })
+      .then((callback) => {
+        if (callback?.ok) {
+          toast.success("Logged In");
+          router.push("/");
+          router.refresh();
+        }
 
-      if (callback?.error) {
-        throw new Error("Wrong Credentials");
-      }
-    });
-
-    router.push("/");
-  };
+        if (callback?.error) {
+          throw new Error("Wrong Credentials");
+        }
+      })
+      .catch((err) => {
+        throw new Error(err);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }
 
   return (
     <form onSubmit={onSubmit} className="text-center">
@@ -54,10 +70,13 @@ export default function page() {
           value={state.password}
         />
 
-        <button type="submit">Submit</button>
+        <Button disabled={loading} type="submit" label="Submit" />
       </div>
+
       <div>
-        Haven't got an account ?<Link href="/register">Sign Up</Link>
+        <div>
+          Haven't got an account ? <Link href="/register">Sign up</Link>
+        </div>
       </div>
     </form>
   );

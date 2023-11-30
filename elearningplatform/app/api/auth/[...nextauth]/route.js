@@ -1,5 +1,5 @@
 import bcrypt from "bcryptjs";
-import NextAuth, { AuthOptions } from "next-auth";
+import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "../../../lib/prismadb";
@@ -32,9 +32,11 @@ export const authOptions = {
           credentials.password,
           user.hashedPassword
         );
+
         if (!isCorrectPassword) {
           throw new Error("Invalid credentials");
         }
+
         return user;
       },
     }),
@@ -46,6 +48,8 @@ export const authOptions = {
   session: {
     strategy: "jwt",
   },
+
+  secret: process.env.NEXTAUTH_SECRET,
 };
 
 const handler = NextAuth(authOptions);
