@@ -5,6 +5,7 @@ import qs from "querystring";
 import { useSearchParams, useRouter } from "next/navigation";
 import UserMenu from "./UserMenu";
 import { useState } from "react";
+import { URLSearchParams } from "url";
 
 export default function Navbar({ myUser, basketItems }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -30,15 +31,9 @@ export default function Navbar({ myUser, basketItems }) {
       ...currentQuery,
       result: searchQuery,
     };
+    const url = qs.stringify(updatedQuery);
 
-    const url = qs.stringifyUrl(
-      {
-        url: "/",
-        query: updatedQuery,
-      },
-      { skipNull: true }
-    );
-    router.push(`/search/${url}`);
+    router.push(`/search/?${url}`);
   };
 
   return (

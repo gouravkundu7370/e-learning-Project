@@ -1,7 +1,7 @@
 "use client";
 import Button from "../(components)/Button";
 import useBasket from "../hooks/useBasket";
-
+import { useRouter } from "next/navigation";
 export default function Induvidual({
   author,
   price,
@@ -15,6 +15,10 @@ export default function Induvidual({
     currentUser,
     courseId,
   });
+  const router = useRouter();
+  const redirectToReview = () => {
+    router.push(`/course/${courseId}/review`);
+  };
 
   return (
     <div>
@@ -48,6 +52,13 @@ export default function Induvidual({
               <p className="text-[12px] text-gray-700 text-center border-t-2 py-2">
                 30 day money back guarantee
               </p>
+            </div>
+            <div>
+              <Button
+                onClick={redirectToReview}
+                type="button"
+                label="Write a Review"
+              />
             </div>
           </div>
         </div>
